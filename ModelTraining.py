@@ -105,7 +105,14 @@ class Model:
             'red_chillies': 'red_chili',
             'shimla_mirch': 'capsicum',
             'tomatoes': 'tomato',
-            'yogurt': 'yoghurt'
+            'yogurt': 'yoghurt',
+            'dahi': 'curd',
+            'firm_white_pumpkin': 'pumpkin',
+            'fresh_coconut': 'coconut',
+            'fresh_green_chilli': 'green_chili',
+            'fresh_green_peas': 'green_peas',
+            'mung_bean': 'moong_beans',
+            'palak': 'spinach'
         }
         for i in change:
             final_data['ingredient'] = final_data['ingredient'].replace([
@@ -113,21 +120,42 @@ class Model:
 
         # Create model df
         model_df = final_data.groupby(['ingredient']).sum().reset_index()
-        col = model_df.columns.to_list()
-        col.remove('ingredient')
-        ing_df = pd.DataFrame(model_df['ingredient'].to_list())
-
-        # Convert all non-zero elements to one and merge it with ing df
-        df = pd.merge(ing_df, model_df[col].astype(bool).astype(
-            int), left_index=True, right_index=True)
-        df = df.rename(columns={0: 'ingredients'})
-
-        self.data = df
+        unwanted = ['bhatura',
+                    'boiled_potatoes',
+                    'boiled_pork',
+                    'boondi',
+                    'bread_crumbs',
+                    'chillies',
+                    'chopped_tomatoes',
+                    'dough',
+                    'filling',
+                    'fry',
+                    'gravy',
+                    'greens',
+                    'hot_water',
+                    'khaman',
+                    'low_fat',
+                    'masala',
+                    'mashed_potato',
+                    'naan_bread',
+                    'spices',
+                    'steamer',
+                    'sticky_rice',
+                    'sweet',
+                    'whole_red',
+                    'water']
+        var1 = []
+        var2 = model_df['ingredient'].to_list()
+        for i in range(len(var2)):
+            if var2[i] in unwanted:
+                var1.append(i)
+        model_df = model_df.drop(model_df.index[var1])
+        self.data = model_df
 
     def model(self) -> None:
         print("Training model....")
         variables = self.data.columns.to_list()
-        variables.remove('ingredients')
+        variables.remove('ingredient')
 
         # Similarity Matrix
         matrix = []
@@ -160,7 +188,7 @@ class Model:
 
 
 def train():
-    ob = Model('datasets\indian_food.csv')
+    ob = Model('datasets/indian_food.csv')
 
     # Pipeline
     ob.model_data()
