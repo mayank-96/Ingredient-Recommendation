@@ -15,7 +15,7 @@ except:
         matrix = pickle.load(pickle_file)
 
 
-def recommend(food):
+def recommend(food, limit):
     if food in model_data['ingredients'].to_list():
         food_index = model_data['ingredients'].to_list().index(food)
         food_list = matrix[food_index]
@@ -26,7 +26,7 @@ def recommend(food):
             score = 100 - food_list[i][1]*100
             food_recc[name] = score
             count += 1
-            if count == 21:
+            if count == limit:
                 break
         food_recc = sorted(food_recc.items(),
                            key=operator.itemgetter(1),
@@ -36,4 +36,4 @@ def recommend(food):
             res[i] = food_recc[i]
         return res
     else:
-        print("ingredient not found")
+        return "Ingredient not found"

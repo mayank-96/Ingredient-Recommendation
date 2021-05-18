@@ -15,10 +15,10 @@ def home():
     return "Welcome to AmazeBasket Ingredient Recommendation API"
 
 
-@app.route("/<item>", methods=['POST', 'GET'])
-def index(item):
+@app.route("/<item>/<limit>", methods=['POST', 'GET'])
+def index(item, limit):
     if request.method == "POST":
-        recommendation = recommend(item)
+        recommendation = recommend(item, limit)
         return recommendation
     else:
         return 'Welcome to AmazeBasket Ingredient Recommendation API'
