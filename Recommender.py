@@ -26,7 +26,7 @@ def recommend(food, limit):
             score = 100 - food_list[i][1]*100
             food_recc[name] = score
             count += 1
-            if count == limit:
+            if count == int(limit):
                 break
         food_recc = sorted(food_recc.items(),
                            key=operator.itemgetter(1),
